@@ -67,5 +67,5 @@ def load_tflite_model():
 
 
 if __name__ == '__main__':
-    convert_tflite_model()
+    # convert_tflite_model()
     load_tflite_model()
