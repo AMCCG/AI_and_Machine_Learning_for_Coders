@@ -1,5 +1,6 @@
 import os
-
+import random
+from shutil import copyfile
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -216,6 +217,7 @@ def lession3_transfer_learning():
 
 def lession3_multiclass_classification():
     print('multiclass')
+
     # Download latest version
     # path = kagglehub.dataset_download("drgfreeman/rockpaperscissors")
     # print("Path to dataset files:", path)
@@ -285,6 +287,55 @@ def lession3_multiclass_classification():
 
 
 def lession3_dogs_cats():
+    print(len(os.listdir('tmp/PetImages/Cat/')))
+    print(len(os.listdir('tmp/PetImages/Dog/')))
+    try:
+        os.mkdir('tmp/cats-v-dogs')
+        os.mkdir('tmp/cats-v-dogs/training')
+        os.mkdir('tmp/cats-v-dogs/testing')
+        os.mkdir('tmp/cats-v-dogs/training/cats')
+        os.mkdir('tmp/cats-v-dogs/training/dogs')
+        os.mkdir('tmp/cats-v-dogs/testing/cats')
+        os.mkdir('tmp/cats-v-dogs/testing/dogs')
+    except OSError:
+        print(OSError.errno)
+        pass
+    split_size = .9
+    CAT_SOURCE_DIR = "tmp/PetImages/Cat/"
+    TRAINING_CATS_DIR = "tmp/cats-v-dogs/training/cats/"
+    TESTING_CATS_DIR = "tmp/cats-v-dogs/testing/cats/"
+    split_data(CAT_SOURCE_DIR, TRAINING_CATS_DIR, TESTING_CATS_DIR, split_size)
+    DOG_SOURCE_DIR = "tmp/PetImages/Dog/"
+    TRAINING_DOGS_DIR = "tmp/cats-v-dogs/training/dogs/"
+    TESTING_DOGS_DIR = "tmp/cats-v-dogs/testing/dogs/"
+    split_data(DOG_SOURCE_DIR, TRAINING_DOGS_DIR, TESTING_DOGS_DIR, split_size)
+    print(len(os.listdir('tmp/cats-v-dogs/training/cats/')))
+    print(len(os.listdir('tmp/cats-v-dogs/training/dogs/')))
+    print(len(os.listdir('tmp/cats-v-dogs/testing/cats/')))
+    print(len(os.listdir('tmp/cats-v-dogs/testing/dogs/')))
+    pass
+
+def split_data(source, training, testing, split_size):
+    files = []
+    for filename in os.listdir(source):
+        file = source + filename
+        if os.path.getsize(file) > 0:
+            files.append(filename)
+        else:
+            print(filename + " is zero length, so ignoring.")
+    training_length = int(len(files) * split_size)
+    testing_length = int(len(files) - training_length)
+    shuffled_set = random.sample(files, len(files))
+    training_set = shuffled_set[0:training_length]
+    testing_set = shuffled_set[:testing_length]
+    for filename in training_set:
+        this_file = source + filename
+        destination = training + filename
+        copyfile(this_file, destination)
+    for filename in testing_set:
+        this_file = source + filename
+        destination = testing + filename
+        copyfile(this_file, destination)
     pass
 
 
@@ -297,4 +348,4 @@ if __name__ == '__main__':
     # Lession3_ImageDataGenerator()
     # lession3_transfer_learning()
     lession3_dogs_cats()
-    lession3_multiclass_classification()
+    # lession3_multiclass_classification()
