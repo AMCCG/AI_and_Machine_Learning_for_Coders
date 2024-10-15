@@ -315,6 +315,7 @@ def lession3_dogs_cats():
     print(len(os.listdir('tmp/cats-v-dogs/testing/dogs/')))
     pass
 
+
 def split_data(source, training, testing, split_size):
     files = []
     for filename in os.listdir(source):
